@@ -14,19 +14,17 @@ jobs:
       - name: Login to docker hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
       - name: Build Docker Image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/nodejs-app  .
+        run: docker build -t muhammedzeki/nodejs-app  .
       - name: Publish Image to docker hub
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/nodejs-app:latest
+        run: docker push muhammedzeki/nodejs-app:latest
 
   deploy:
     needs: build
     runs-on: self-hosted
     steps:
-      - name: Login to docker hub
-        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
       - name: Pull image from docker hub
-        run: docker pull ${{ secrets.DOCKER_USERNAME }}/nodejs-app:latest
+        run: docker pull muhammedzeki/nodejs-app:latest
       - name: Delete old container
         run: docker rm -f nodejs-app-container
       - name: Run Docker Container
-        run: docker run -d -p 4000:4000 --name nodejs-app-container -e MONGO_PASSWORD='${{ secrets.MONGO_PASSWORD }}' ${{ secrets.DOCKER_USERNAME }}/nodejs-app
+        run: docker run -d -p 4000:4000 --name nodejs-app-container -e MONGO_PASSWORD='${{ secrets.MONGO_PASSWORD }}' muhammedzeki/nodejs-app
